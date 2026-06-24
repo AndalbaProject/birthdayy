@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>for you ♡</title>
+  <meta name="description" content="a little cute website made with love for your birthday." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- floating hearts background -->
+  <div class="hearts-bg" id="heartsBg" aria-hidden="true"></div>
+
+  <!-- music control -->
+  <button class="music-toggle" id="musicToggle" aria-label="putar / hentikan musik">
+    <span class="note">♪</span>
+  </button>
+
+  <div class="app" id="app">
+
+    <!-- ============ 1. INTRO ============ -->
+    <section class="screen" data-screen="intro">
+      <div class="screen-inner">
+        <p class="hi-text">Hi</p>
+        <div class="cat-wrap big" data-cat="normal"></div>
+        <h1 class="title">haii, sayangku 🫶👋</h1>
+        <button class="btn solid" data-go="announce">ketuk sini &lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 2. PASSWORD ============ -->
+    <section class="screen active" data-screen="gate">
+      <div class="screen-inner">
+        <div class="cat-wrap small" data-cat="curious"></div>
+        <h2 class="title sm">Hai, tebak dulu passwordnya yuk,<br/>pasti kamu tauu!!</h2>
+
+        <div class="pin-dots" id="pinDots">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="keypad" id="keypad">
+          <button data-key="1">1</button>
+          <button data-key="2">2</button>
+          <button data-key="3">3</button>
+          <button data-key="4">4</button>
+          <button data-key="5">5</button>
+          <button data-key="6">6</button>
+          <button data-key="7">7</button>
+          <button data-key="8">8</button>
+          <button data-key="9">9</button>
+          <span class="spacer"></span>
+          <button data-key="0">0</button>
+          <button data-key="del" class="del">⌫</button>
+        </div>
+
+        <p class="clue">petunjuk : tanggal lahir mas</p>
+      </div>
+    </section>
+
+    <!-- ============ 3. ANNOUNCE ============ -->
+    <section class="screen" data-screen="announce">
+      <div class="screen-inner">
+        <div class="cat-wrap small sticker-card" data-cat="happy">
+          <span class="deco star a">✦</span>
+          <span class="deco star b">★</span>
+          <span class="deco star c">✦</span>
+        </div>
+        <h2 class="title">Hari ini, Kamu ulang tahun yang ke <span id="ageText">20</span>!<br/>selamat ulang tahun, sayangku 🤍</h2>
+        <button class="btn solid" data-go="ready">buka yaa &lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 4. READY ============ -->
+    <section class="screen" data-screen="ready">
+      <div class="screen-inner">
+        <div class="cat-wrap small" data-cat="arms">
+          <span class="deco hb a">💛</span>
+          <span class="deco hb b">💗</span>
+        </div>
+        <h2 class="title">udah siap belum buat buka iniii?</h2>
+        <div class="btn-row">
+          <button class="btn solid" data-go="pic1">iyaa</button>
+          <button class="btn outline" id="nooBtn" data-go="angry">ngga</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. ANGRY ============ -->
+    <section class="screen" data-screen="angry">
+      <div class="screen-inner">
+        <div class="cat-wrap small" data-cat="angry">
+          <span class="deco angry">💢</span>
+        </div>
+        <h2 class="title angry-text">OH GITU SEKARANG KAMU SAMA AKU?😡</h2>
+        <button class="btn solid" data-go="ready">balik</button>
+      </div>
+    </section>
+
+    <!-- ============ 6. FIRST PICTURE ============ -->
+    <section class="screen" data-screen="pic1">
+      <div class="screen-inner">
+        <div class="photo-frame">
+          <span class="photo" style="background-image:url('foto1.jpeg')"></span>
+        </div>
+        <h2 class="title sm">Aku bersyukur banget sama setiap momen yang udah kita lewatin</h2>
+        <button class="btn solid" data-go="pic2">klik ini &lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 7. GRATEFUL ============ -->
+    <section class="screen" data-screen="pic2">
+      <div class="screen-inner">
+        <div class="photo-frame">
+          <span class="photo" style="background-image:url('foto2.jpeg')"></span>
+        </div>
+        <h2 class="title sm">Semoga segala doa baik dikabulkan dan impian tercapai.</h2>
+        <button class="btn solid" data-go="pic3">klik ini &lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 7b. FOTO 3 ============ -->
+    <section class="screen" data-screen="pic3">
+      <div class="screen-inner">
+        <div class="photo-frame">
+          <span class="photo" style="background-image:url('foto3.jpeg')"></span>
+        </div>
+        <h2 class="title sm">Dan aku mau terus nambahin lebih banyak kenangan indah bareng kamu, sampai nanti, sampai tua 💗</h2>
+        <button class="btn solid" data-go="lastone">klik ini &lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 8. LAST ONE ============ -->
+    <section class="screen" data-screen="lastone">
+      <div class="screen-inner">
+        <div class="cat-wrap small sticker-card" data-cat="happy"></div>
+        <h2 class="title">Tak banyak kata, hanya doa terbaik untukmu. Semoga yang baik selalu menyertaimu</h2>
+        <button class="btn solid round" data-go="song">&lt;3</button>
+      </div>
+    </section>
+
+    <!-- ============ 9. OUR SONG ============ -->
+    <section class="screen" data-screen="song">
+      <div class="screen-inner">
+        <div class="music-emoji">🎶</div>
+        <h2 class="title">lagu kita 🎵</h2>
+        <button class="btn solid" data-go="playlist">putar &amp; lanjut →</button>
+      </div>
+    </section>
+
+    <!-- ============ 10. PLAYLIST ============ -->
+    <section class="screen" data-screen="playlist">
+      <div class="screen-inner">
+        <div class="spotify-card">
+          <div class="sp-head">
+            <span class="sp-cover">🐰</span>
+            <span class="sp-logo">●</span>
+          </div>
+          <p class="sp-title"><span id="plName">for u</span> · <span id="plBy">Lovee</span></p>
+          <ul class="sp-list" id="songList"></ul>
+        </div>
+        <button class="btn solid" data-go="letter">Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- ============ 11. LETTER ============ -->
+    <section class="screen" data-screen="letter">
+      <div class="screen-inner letter-inner">
+        <h2 class="title">Selamat ulang tahun, sayangku 🤍💖</h2>
+        <div class="letter-quote">
+          <p id="letterText"></p>
+        </div>
+        <button class="btn solid" data-go="gate">Kembali ke Awal</button>
+      </div>
+    </section>
+
+  </div>
+
+  <audio id="bgm" loop preload="auto">
+    <source src="song.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
