@@ -11,7 +11,8 @@ const CONFIG = {
   playlistName: "for u",
   playlistBy: "Lovee",
   songs: [
-    { song: "Abadi", artist: "Perunggu", time: "03:52" },
+    { song: "Abadi", artist: "Perunggu", time: "03:52", file: "song.mp3" },
+    { song: "Risk It All", artist: "Bruno Mars", time: "03:24", file: "song2.mp3" },
   ],
 
   // surat (akan diketik perlahan)
@@ -19,10 +20,24 @@ const CONFIG = {
 `i love you today,tomorrow and forever,terimakasih telah hadir dihidupku dari banyak nya orang orang'yang datang dikehidupan ku,terimakasih karna kamu sudah menjadi yang terbaik diantara mereka,terimakasih atas kesabaran mu yang telah kamu berikan kepada ku,aku paham bahwa hidup hanya tentang rasa bersyukur dan cukup,kita akan kehilangan seseorang yang selalu ada tanpa salah paham,kadang kita saling melukai tanpa sadar,tapi percayalah semua hubungan pasti ada badai nya,intinya cuma satu lewati bareng'badainya dan jangan ganti orang nya 🤍✨`,
 };
 
+/* ---------- DOM elements ---------- */
+const ageText = document.getElementById("ageText");
+const plName = document.getElementById("plName");
+const plBy = document.getElementById("plBy");
+const songList = document.getElementById("songList");
+const screens = document.querySelectorAll(".screen");
+const pinDots = document.getElementById("pinDots");
+const keypad = document.getElementById("keypad");
+const nooBtn = document.getElementById("nooBtn");
+const letterEl = document.getElementById("letterText");
+const bgm = document.getElementById("bgm");
+const musicToggle = document.getElementById("musicToggle");
+const heartsBg = document.getElementById("heartsBg");
+
 /* ---------- apply config ---------- */
-document.getElementById("ageText").textContent = CONFIG.age;
-document.getElementById("plName").textContent = CONFIG.playlistName;
-document.getElementById("plBy").textContent = CONFIG.playlistBy;
+if (ageText) ageText.textContent = CONFIG.age;
+if (plName) plName.textContent = CONFIG.playlistName;
+if (plBy) plBy.textContent = CONFIG.playlistBy;
 
 /* ============================================================
    CUTE CAT BUILDER — wajah berganti ekspresi dengan cepat
@@ -136,18 +151,57 @@ document.addEventListener("click", (e) => {
 });
 
 
-const songList = document.getElementById("songList");
-CONFIG.songs.forEach((s, i) => {
-  const li = document.createElement("li");
-  li.innerHTML =
-    `<span class="sp-num">${i + 1}</span>` +
-    `<span><span class="sp-song">${s.song}</span><br/><span class="sp-artist">${s.artist}</span></span>` +
-    `<span class="sp-time">${s.time}</span>`;
-  songList.appendChild(li);
-});
+let currentTrackIndex = 0;
+
+function playTrack(index) {
+  currentTrackIndex = index;
+  const track = CONFIG.songs[index];
+  
+  if (bgm && track) {
+    // get current filename from the path
+    const currentSrc = bgm.src.substring(bgm.src.lastIndexOf('/') + 1);
+    if (currentSrc !== track.file) {
+      bgm.src = track.file;
+      bgm.load();
+    }
+    tryPlayMusic();
+  }
+  
+  // update UI classes
+  if (songList) {
+    const lis = songList.querySelectorAll("li");
+    lis.forEach((li, idx) => {
+      li.classList.toggle("playing-track", idx === index);
+    });
+  }
+}
+
+// set default audio source to first song
+if (bgm && CONFIG.songs[0]) {
+  bgm.src = CONFIG.songs[0].file;
+}
+
+if (songList) {
+  CONFIG.songs.forEach((s, i) => {
+    const li = document.createElement("li");
+    li.innerHTML =
+      `<span class="sp-num">${i + 1}</span>` +
+      `<span><span class="sp-song">${s.song}</span><br/><span class="sp-artist">${s.artist}</span></span>` +
+      `<span class="sp-time">${s.time}</span>`;
+    
+    if (i === currentTrackIndex) {
+      li.classList.add("playing-track");
+    }
+    
+    li.addEventListener("click", () => {
+      playTrack(i);
+    });
+    
+    songList.appendChild(li);
+  });
+}
 
 /* ---------- screen navigation ---------- */
-const screens = document.querySelectorAll(".screen");
 let letterTyped = false;
 
 function showScreen(id) {
@@ -166,107 +220,118 @@ document.querySelectorAll("[data-go]").forEach((btn) => {
 });
 
 /* ---------- password keypad ---------- */
-const pinDots = document.getElementById("pinDots");
-const keypad = document.getElementById("keypad");
 let pin = "";
 
 function renderPin() {
-  pinDots.querySelectorAll("span").forEach((d, i) => {
-    d.classList.toggle("filled", i < pin.length);
-  });
+  if (pinDots) {
+    pinDots.querySelectorAll("span").forEach((d, i) => {
+      d.classList.toggle("filled", i < pin.length);
+    });
+  }
 }
 function resetPin() {
   pin = "";
   renderPin();
 }
 
-keypad.addEventListener("click", (e) => {
-  const btn = e.target.closest("button");
-  if (!btn) return;
-  const key = btn.dataset.key;
+if (keypad) {
+  keypad.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    const key = btn.dataset.key;
 
-  if (key === "del") {
-    pin = pin.slice(0, -1);
-  } else if (pin.length < 6) {
-    pin += key;
-  }
-  renderPin();
+    if (key === "del") {
+      pin = pin.slice(0, -1);
+    } else if (pin.length < 6) {
+      pin += key;
+    }
+    renderPin();
 
-  if (pin.length === 6) {
-    setTimeout(checkPin, 180);
-  }
-});
+    if (pin.length === 6) {
+      setTimeout(checkPin, 180);
+    }
+  });
+}
 
 function checkPin() {
   if (pin === CONFIG.password) {
     spawnHearts(20);
     showScreen("intro");
   } else {
-    pinDots.classList.add("shake");
+    if (pinDots) pinDots.classList.add("shake");
     setTimeout(() => {
-      pinDots.classList.remove("shake");
+      if (pinDots) pinDots.classList.remove("shake");
       resetPin();
     }, 500);
   }
 }
 
 /* ---------- "noo" button runs away ---------- */
-const nooBtn = document.getElementById("nooBtn");
 let dodges = 0;
 function dodge() {
   dodges++;
   const dx = (Math.random() - 0.5) * 180;
   const dy = (Math.random() - 0.5) * 120;
-  nooBtn.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 12}deg)`;
+  if (nooBtn) {
+    nooBtn.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 12}deg)`;
+  }
 }
-nooBtn.addEventListener("mouseenter", dodge);
-nooBtn.addEventListener("touchstart", (e) => {
-  // di mobile: 2x sentuh pertama kabur, lalu baru ke layar marah
-  if (dodges < 2) { e.preventDefault(); dodge(); }
-});
+if (nooBtn) {
+  nooBtn.addEventListener("mouseenter", dodge);
+  nooBtn.addEventListener("touchstart", (e) => {
+    // di mobile: 2x sentuh pertama kabur, lalu baru ke layar marah
+    if (dodges < 2) { e.preventDefault(); dodge(); }
+  });
+}
 
 /* ---------- typing letter ---------- */
-const letterEl = document.getElementById("letterText");
 function typeLetter() {
   if (letterTyped) return;
   letterTyped = true;
   const text = CONFIG.letter;
-  letterEl.textContent = "";
-  const cursor = document.createElement("span");
-  cursor.className = "cursor";
-  letterEl.after(cursor);
+  if (letterEl) {
+    letterEl.textContent = "";
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    letterEl.after(cursor);
 
-  let i = 0;
-  (function step() {
-    if (i <= text.length) {
-      letterEl.textContent = text.slice(0, i);
-      i++;
-      setTimeout(step, 28);
-    } else {
-      cursor.remove();
-      spawnHearts(24);
-    }
-  })();
+    let i = 0;
+    (function step() {
+      if (i <= text.length) {
+        letterEl.textContent = text.slice(0, i);
+        i++;
+        setTimeout(step, 28);
+      } else {
+        cursor.remove();
+        spawnHearts(24);
+      }
+    })();
+  }
 }
 
 /* ---------- background music ---------- */
-const bgm = document.getElementById("bgm");
-const musicToggle = document.getElementById("musicToggle");
-
 function tryPlayMusic() {
-  bgm.volume = 0.5;
-  bgm.play()
-    .then(() => musicToggle.classList.add("playing"))
-    .catch(() => {});
-}
-musicToggle.addEventListener("click", () => {
-  if (bgm.paused) {
-    bgm.play().then(() => musicToggle.classList.add("playing")).catch(() => {});
-  } else {
-    bgm.pause();
-    musicToggle.classList.remove("playing");
+  if (bgm) {
+    bgm.volume = 0.5;
+    bgm.play()
+      .then(() => {
+        if (musicToggle) musicToggle.classList.add("playing");
+      })
+      .catch(() => {});
   }
-});
+}
+if (musicToggle) {
+  musicToggle.addEventListener("click", () => {
+    if (bgm) {
+      if (bgm.paused) {
+        bgm.play().then(() => musicToggle.classList.add("playing")).catch(() => {});
+      } else {
+        bgm.pause();
+        musicToggle.classList.remove("playing");
+      }
+    }
+  });
+}
 
 /* ---------- mulai musik dari awal ---------- */
 let musicStarted = false;
@@ -277,8 +342,13 @@ function startMusicOnce() {
 }
 /* coba langsung saat halaman dibuka (mungkin diblok browser) */
 window.addEventListener("load", () => {
-  bgm.volume = 0.5;
-  bgm.play().then(() => { musicStarted = true; musicToggle.classList.add("playing"); }).catch(() => {});
+  if (bgm) {
+    bgm.volume = 0.5;
+    bgm.play().then(() => {
+      musicStarted = true;
+      if (musicToggle) musicToggle.classList.add("playing");
+    }).catch(() => {});
+  }
 });
 /* kalau diblok, mulai pada interaksi pertama */
 ["pointerdown", "touchstart", "keydown", "click"].forEach((ev) =>
@@ -286,7 +356,6 @@ window.addEventListener("load", () => {
 );
 
 /* ---------- floating hearts ---------- */
-const heartsBg = document.getElementById("heartsBg");
 const HEART_EMOJI = ["💖", "💗", "🤍", "🌸", "⭐"];
 
 function spawnHearts(count) {
